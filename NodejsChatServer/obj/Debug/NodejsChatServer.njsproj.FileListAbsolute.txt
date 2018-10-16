@@ -1,0 +1,3 @@
+E:\1 Helder\Projetos\VisualStudio\NodejsChatServer\NodejsChatServer\obj\Debug\NodejsChatServer.njsprojAssemblyReference.cache
+E:\1 Helder\Projetos\VisualStudio\NodejsChatServer\NodejsChatServer\obj\Debug\NodejsChatServer.njsproj.CoreCompileInputs.cache
+E:\1 Helder\Projetos\VisualStudio\NodejsChatServer\NodejsChatServer\bin\Microsoft.NodejsTools.WebRole.dll
