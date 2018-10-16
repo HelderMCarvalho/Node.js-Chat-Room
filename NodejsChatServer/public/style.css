@@ -8,6 +8,10 @@ body {
     font: 13px Helvetica, Arial;
 }
 
+.text-center{
+    text-align: center;
+}
+
 /*PÁGINA MENSAGENS*/
 form#mensagem {
     background: #000;
@@ -42,10 +46,13 @@ form#mensagem {
         }
 
 a {
-    width: 10%;
+    width: 9%;
     background: rgb(130, 224, 255);
     border: none;
     padding: 10px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
 }
 /*FIM PÁGINA MENSAGENS*/
 
@@ -54,15 +61,15 @@ div.registar {
     width: auto;
     margin: 0 auto;
 }
-form#utilizador{
+form#registarUtilizador, form#loginUtilizador {
     text-align: center;
 }
-    form#utilizador button {
+    form#registarUtilizador button, form#loginUtilizador button {
         background: rgb(130, 224, 255);
         border: none;
         padding: 10px;
     }
-h3.nomeUtilizadorExiste{
+h3.erroLoginRegisto{
     color: red;
     display: none;
 }

@@ -5,12 +5,34 @@
         <link rel="stylesheet" href="./style.css" type="text/css">
     </head>
     <body>
-        <a href="./registar.html">Registar</a>
-        <ul id="listaMensagens"></ul>
-        <form id="mensagem" action="">
-            <input id="inputMensagem" type="text" autocomplete="off" />
-            <button type="submit">Enviar</button>
-        </form>
+        <div id="loginHeader">
+            <div class="text-center" style="float: left; width: 50%;">
+                <a href="./registar.html">Registar</a>
+            </div>
+            <div class="text-center" style="float: right; width: 50%;">
+                <h1 style="float: left;">Login:</h1>
+                <form id="loginUtilizador">
+                    <label>Nome de Utilizador: </label>
+                    <input id="inputUtilizador" type="text" autocomplete="off" />
+                    <label>Palavra-passe: </label>
+                    <input id="inputPassword" type="password" autocomplete="off" />
+                    <button type="submit">Login</button>
+                    <h3 class="erroLoginRegisto">Nome de utilizador ou palavra passe errados!</h3>
+                </form>
+            </div>
+        </div>
+        <div id="logoutHeader" style="display: none;">
+            <div class="text-center">
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div>
+            <ul id="listaMensagens"></ul>
+            <form id="mensagem" action="">
+                <input id="inputMensagem" type="text" autocomplete="off" />
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
         <script src='https://code.jquery.com/jquery-1.11.1.js'></script>
         <script src='/socket.io/socket.io.js'></script>
         <script src="./scripts.js" type="text/javascript"></script>
