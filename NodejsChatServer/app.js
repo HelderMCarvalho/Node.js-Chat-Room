@@ -12,14 +12,23 @@ var buffer = require('buffer');
 aplicacao.use(express.static(__dirname + '/public'));
 //FIM ROTAS
 
+var utilizadoresLigados = [];
+
 socket.on('connection', function (socket2) {
     console.log('Utilizador Ligado!');
     var utilizador = { nome: 'GUEST', password: '' };
+    utilizadoresLigados.push(socket2);
     socket2.on('disconnect', function () {
         console.log('Utilizador desligado!');
-    });
-    socket2.on('envioMensagem', function (mensagem) {
-        socket.emit('envioMensagem', { utilizador: utilizador.nome, msg: mensagem });
+    }).on('envioMensagemServidor', function (mensagem) {
+        utilizadoresLigados.forEach(function (uti) {
+            if (uti === socket2) {
+                return;
+            }
+            uti.emit('envioMensagemCliente', { utilizador: utilizador.nome, msg: mensagem });
+        });
+    }).on('end', function () {
+        utilizadoresLigados.splice(utilizadoresLigados.indexOf(socket2), 1);
     });
 
     //FUNÇÃO REGISTAR UTILIZADORES
@@ -44,17 +53,15 @@ socket.on('connection', function (socket2) {
                         throw err;
                     }
                     console.log('Utilizador criado!');
-                    socket.emit('confirmacaoRegistarUtilizador', 1); //Registou com sucesso
-                    socket.emit('redirect', '/');
+                    socket2.emit('redirect', '/'); //Registou com sucesso
                 });
             }
             else {
-                socket.emit('confirmacaoRegistarUtilizador', 0); //Não registou
+                socket2.emit('confirmacaoRegistarUtilizador', 0); //Não registou
             }
         });
         //FIM LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM COM O MESMO NOME
-    });
-    socket2.on('loginUtilizador', function (uti) {
+    }).on('loginUtilizador', function (uti) {
         var existe = 0; //0 - Não existe | 1 - Existe
         //LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM REGISTADO COM ESSE NOME
         var rl = readline.createInterface({
@@ -64,7 +71,6 @@ socket.on('connection', function (socket2) {
             if (existe == 0) {
                 if (uti.nome == line) {
                     existe = 1;
-                    console.log(line);
                 }
             } else if (existe == 1) {
                 var buff = new Buffer(line, 'base64');
@@ -73,15 +79,15 @@ socket.on('connection', function (socket2) {
                     rl.close();
                 }
             }
-            }).on('close', function () {
-                if (existe == 0) {
-                    socket.emit('confirmacaoLoginUtilizador', 0); //Não fez login
-                }
-                else if (existe == 1) {
-                    utilizador = uti;
-                    socket.emit('confirmacaoLoginUtilizador', 1); //Fez login
-                }
-            });
+        }).on('close', function () {
+            if (existe == 0) {
+                socket2.emit('confirmacaoLoginUtilizador', 0); //Não fez login
+            }
+            else if (existe == 1) {
+                utilizador = uti;
+                socket2.emit('confirmacaoLoginUtilizador', 1); //Fez login
+            }
+        });
         //LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM REGISTADO COM ESSE NOME
     });
 });
