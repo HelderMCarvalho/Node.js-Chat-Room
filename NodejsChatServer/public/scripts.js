@@ -6,7 +6,18 @@ $(function () {
         socket.emit('envioMensagemServidor', $('#inputMensagem').val());
         $('#listaMensagens').append($('<li>').text(utilizador + ': ' + $('#inputMensagem').val()));
         $('#inputMensagem').val('');
+        $("#mensagens").scrollTop($("#mensagens")[0].scrollHeight);
         return false;
+    });
+    var tem = false;
+    $("#inputMensagem").keyup(function () {
+        if (($("#inputMensagem").val().length == 1) && (tem == false)) {
+            tem = true;
+            //EVENTO AQUIIIIIIIIII DE COMEÇOU A ESCREVER
+        }else if ($(this).val() == '') {
+            tem = false;
+            //EVENTO AQUIIIIII DE PAROU DE ESCREVER
+        }
     });
 
     //REGISTAR

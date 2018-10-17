@@ -90,6 +90,14 @@ socket.on('connection', function (socket2) {
         });
         //LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM REGISTADO COM ESSE NOME
     });
+
+    /*socket2.on('comecaEscrever', function () {
+        utilizadoresLigados.forEach(function (uti) {
+            if (uti === socket2) {
+                return;
+            }
+            uti.emit('mostrarEscrever', { utilizador: utilizador.nome, msg: mensagem });
+    });*/
 });
 
 http.listen(5000, function () {
