@@ -18,8 +18,11 @@ socket.on('connection', function (socket2) {
     console.log('Utilizador Ligado!');
     var utilizador = { nome: 'GUEST', password: '' };
     utilizadoresLigados.push(socket2);
+    console.log(utilizadoresLigados.length);
     socket2.on('disconnect', function () {
         console.log('Utilizador desligado!');
+        utilizadoresLigados.splice(utilizadoresLigados.indexOf(socket2), 1);
+        console.log(utilizadoresLigados.length);
     }).on('envioMensagemServidor', function (mensagem) {
         utilizadoresLigados.forEach(function (uti) {
             if (uti === socket2) {
@@ -27,8 +30,6 @@ socket.on('connection', function (socket2) {
             }
             uti.emit('envioMensagemCliente', { utilizador: utilizador.nome, msg: mensagem });
         });
-    }).on('end', function () {
-        utilizadoresLigados.splice(utilizadoresLigados.indexOf(socket2), 1);
     });
 
     //FUNÇÃO REGISTAR UTILIZADORES

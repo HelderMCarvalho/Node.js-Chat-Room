@@ -57,4 +57,7 @@ $(function () {
     socket.on('envioMensagemCliente', function (mensagem) {
         $('#listaMensagens').append($('<li>').text(mensagem.utilizador + ': ' + mensagem.msg));
     });
+
+    //RECEBER QUEM ESTÁ A ESCREVER
+
 });
