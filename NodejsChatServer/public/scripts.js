@@ -9,16 +9,23 @@ $(function () {
         $("#mensagens").scrollTop($("#mensagens")[0].scrollHeight);
         return false;
     });
+    //FIM ENVIAR MENSAGEM
+
+    //ENVIAR ESTADO DE COMEÇOU/PAROU DE ESCREVER
     var tem = false;
+    var vazio = true;
     $("#inputMensagem").keyup(function () {
         if (($("#inputMensagem").val().length == 1) && (tem == false)) {
             tem = true;
-            //EVENTO AQUIIIIIIIIII DE COMEÇOU A ESCREVER
-        }else if ($(this).val() == '') {
+            vazio = false;
+            socket.emit('comecaEscrever');
+        } else if (($(this).val() == '') && (vazio == false)) {
             tem = false;
-            //EVENTO AQUIIIIII DE PAROU DE ESCREVER
+            vazio = true;
+            socket.emit('parouEscrever');
         }
     });
+    //FIM DE ENVIAR ESTADO DE COMEÇOU/PAROU DE ESCREVER
 
     //REGISTAR
     $('form#registarUtilizador').submit(function () {
@@ -59,5 +66,13 @@ $(function () {
     });
 
     //RECEBER QUEM ESTÁ A ESCREVER
+    socket.on('mostrarEscrever', function (utilizadorEscreve) {
+        $('#listaEscrever').append($('<li id="' + utilizadorEscreve + '">').text(utilizadorEscreve + ' está a escrever!'));
+    });
 
+    //RECEBER QUEM PAROU DE ESCREVER
+    socket.on('retirarEscrever', function (utilizadorParouEscrever) {
+        var id = '#' + utilizadorParouEscrever;
+        $(id).remove();
+    });
 });

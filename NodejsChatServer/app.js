@@ -15,14 +15,12 @@ aplicacao.use(express.static(__dirname + '/public'));
 var utilizadoresLigados = [];
 
 socket.on('connection', function (socket2) {
-    console.log('Utilizador Ligado!');
     var utilizador = { nome: 'GUEST', password: '' };
     utilizadoresLigados.push(socket2);
-    console.log(utilizadoresLigados.length);
+    console.log('Utilizador Ligado! TOTAL: ' + utilizadoresLigados.length);
     socket2.on('disconnect', function () {
-        console.log('Utilizador desligado!');
         utilizadoresLigados.splice(utilizadoresLigados.indexOf(socket2), 1);
-        console.log(utilizadoresLigados.length);
+        console.log('Utilizador desligado! TOTAL: ' + utilizadoresLigados.length);
     }).on('envioMensagemServidor', function (mensagem) {
         utilizadoresLigados.forEach(function (uti) {
             if (uti === socket2) {
@@ -30,10 +28,8 @@ socket.on('connection', function (socket2) {
             }
             uti.emit('envioMensagemCliente', { utilizador: utilizador.nome, msg: mensagem });
         });
-    });
-
-    //FUNÇÃO REGISTAR UTILIZADORES
-    socket2.on('registarUtilizador', function (uti) {
+    }).on('registarUtilizador', function (uti) {
+        //FUNÇÃO REGISTAR UTILIZADORES
         var existe = 0; //0 - Não existe | 1 - Existe
         //LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM COM O MESMO NOME
         var rl = readline.createInterface({
@@ -85,7 +81,7 @@ socket.on('connection', function (socket2) {
                     rl.close();
                 }
             }
-            }).on('close', function () {
+        }).on('close', function () {
             if (existe == 0 || passcorreta == 0) {
                 socket2.emit('confirmacaoLoginUtilizador', 0); //Não fez login
             }
@@ -94,16 +90,22 @@ socket.on('connection', function (socket2) {
                 socket2.emit('confirmacaoLoginUtilizador', 1); //Fez login
             }
         });
-        //LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM REGISTADO COM ESSE NOME
-    });
-
-    /*socket2.on('comecaEscrever', function () {
+        //FIM LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM REGISTADO COM ESSE NOME
+    }).on('comecaEscrever', function () {
         utilizadoresLigados.forEach(function (uti) {
             if (uti === socket2) {
                 return;
             }
-            uti.emit('mostrarEscrever', { utilizador: utilizador.nome, msg: mensagem });
-    });*/
+            uti.emit('mostrarEscrever', utilizador.nome);
+        });
+    }).on('parouEscrever', function () {
+        utilizadoresLigados.forEach(function (uti) {
+            if (uti === socket2) {
+                return;
+            }
+            uti.emit('retirarEscrever', utilizador.nome);
+        });
+    });
 });
 
 http.listen(5000, function () {
