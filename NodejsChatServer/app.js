@@ -62,12 +62,14 @@ socket.on('connection', function (socket2) {
         });
         //FIM LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM COM O MESMO NOME
     }).on('loginUtilizador', function (uti) {
-        var existe = 0; //0 - Não existe | 1 - Existe
+        var existe = 0, passcorreta = 0; //0 - Não existe | 1 - Existe
         //LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM REGISTADO COM ESSE NOME
+        var readStream = fs.createReadStream('utilizadores.txt');
         var rl = readline.createInterface({
-            input: fs.createReadStream('utilizadores.txt'),
+            input: readStream,
             crlfDelay: Infinity
         }).on('line', function (line) {
+            console.log(line);
             if (existe == 0) {
                 if (uti.nome == line) {
                     existe = 1;
@@ -76,14 +78,17 @@ socket.on('connection', function (socket2) {
                 var buff = new Buffer(line, 'base64');
                 var password = buff.toString('ascii');
                 if (uti.password == password) {
+                    passcorreta = 1;
+                    rl.close();
+                } else {
                     rl.close();
                 }
             }
-        }).on('close', function () {
-            if (existe == 0) {
+            }).on('close', function () {
+            if (existe == 0 || passcorreta == 0) {
                 socket2.emit('confirmacaoLoginUtilizador', 0); //Não fez login
             }
-            else if (existe == 1) {
+            else if (existe == 1 && passcorreta == 1) {
                 utilizador = uti;
                 socket2.emit('confirmacaoLoginUtilizador', 1); //Fez login
             }
