@@ -1,4 +1,4 @@
-$(function () {
+Ôªø$(function () {
     var socket = io();
     var utilizador = 'GUEST';
     //ENVIAR MENSAGEM
@@ -11,7 +11,7 @@ $(function () {
     });
     //FIM ENVIAR MENSAGEM
 
-    //ENVIAR ESTADO DE COME«OU/PAROU DE ESCREVER
+    //ENVIAR ESTADO DE COME√áOU/PAROU DE ESCREVER
     var tem = false;
     var vazio = true;
     $("#inputMensagem").keyup(function () {
@@ -25,7 +25,7 @@ $(function () {
             socket.emit('parouEscrever');
         }
     });
-    //FIM DE ENVIAR ESTADO DE COME«OU/PAROU DE ESCREVER
+    //FIM DE ENVIAR ESTADO DE COME√áOU/PAROU DE ESCREVER
 
     //REGISTAR
     $('form#registarUtilizador').submit(function () {
@@ -51,11 +51,12 @@ $(function () {
     });
     socket.on('confirmacaoLoginUtilizador', function (flag) {
         if (flag == 0) {
-            $('h3.erroLoginRegisto').css('display', 'block'); //N„o fez login
+            $('h3.erroLoginRegisto').css('display', 'block'); //N√£o fez login
         } else if (flag == 1) {
-            $('div#loginHeader').css('display', 'none'); //Fez login
-            $('div#logoutHeader').css('display', 'block');
             utilizador = $('#inputUtilizador').val();
+            $('div#loginHeader').css('display', 'none'); //Fez login
+            $('#utilizadorLigado').text('Bem vindo ' + utilizador + '!');
+            $('div#logoutHeader').css('display', 'block');
         }
     });
     //FIM LOGIN
@@ -65,14 +66,23 @@ $(function () {
         $('#listaMensagens').append($('<li>').text(mensagem.utilizador + ': ' + mensagem.msg));
     });
 
-    //RECEBER QUEM EST¡ A ESCREVER
+    //RECEBER QUEM EST√Å A ESCREVER
     socket.on('mostrarEscrever', function (utilizadorEscreve) {
-        $('#listaEscrever').append($('<li id="' + utilizadorEscreve + '">').text(utilizadorEscreve + ' est· a escrever!'));
+        $('#listaEscrever').append($('<li id="escrever' + utilizadorEscreve + '">').text(utilizadorEscreve + ' est√° a escrever!'));
+        console.log('&aacute;');
     });
 
     //RECEBER QUEM PAROU DE ESCREVER
     socket.on('retirarEscrever', function (utilizadorParouEscrever) {
-        var id = '#' + utilizadorParouEscrever;
+        var id = '#escrever' + utilizadorParouEscrever;
         $(id).remove();
+    });
+
+    //ATUALIZAR LISTA DE UTILIZADORES LIGADOS
+    socket.on('atualizarUtilizadoresLigados', function (nomesUtilizadoresLigados) {
+        $('#listautilizadoresLigados').empty();
+        $.each(nomesUtilizadoresLigados, function (key, value) {
+            $('#listautilizadoresLigados').append($('<li id="utilizador' + value + '">').text(value));
+        });
     });
 });

@@ -13,13 +13,18 @@ aplicacao.use(express.static(__dirname + '/public'));
 //FIM ROTAS
 
 var utilizadoresLigados = [];
+var nomeUtilizadoresLigados = [];
 
 socket.on('connection', function (socket2) {
     var utilizador = { nome: 'GUEST', password: '' };
     utilizadoresLigados.push(socket2);
+    nomeUtilizadoresLigados.push(utilizador.nome);
+    socket.emit('atualizarUtilizadoresLigados', nomeUtilizadoresLigados);
     console.log('Utilizador Ligado! TOTAL: ' + utilizadoresLigados.length);
     socket2.on('disconnect', function () {
         utilizadoresLigados.splice(utilizadoresLigados.indexOf(socket2), 1);
+        nomeUtilizadoresLigados.splice(nomeUtilizadoresLigados.indexOf(utilizador.nome), 1);
+        socket.emit('atualizarUtilizadoresLigados', nomeUtilizadoresLigados);
         console.log('Utilizador desligado! TOTAL: ' + utilizadoresLigados.length);
     }).on('envioMensagemServidor', function (mensagem) {
         utilizadoresLigados.forEach(function (uti) {
@@ -66,7 +71,6 @@ socket.on('connection', function (socket2) {
             input: readStream,
             crlfDelay: Infinity
         }).on('line', function (line) {
-            console.log(line);
             if (existe == 0) {
                 if (uti.nome == line) {
                     existe = 1;
@@ -86,8 +90,11 @@ socket.on('connection', function (socket2) {
                 socket2.emit('confirmacaoLoginUtilizador', 0); //Não fez login
             }
             else if (existe == 1 && passcorreta == 1) {
+                nomeUtilizadoresLigados.splice(nomeUtilizadoresLigados.indexOf('GUEST'), 1);
                 utilizador = uti;
                 socket2.emit('confirmacaoLoginUtilizador', 1); //Fez login
+                nomeUtilizadoresLigados.push(utilizador.nome);
+                socket.emit('atualizarUtilizadoresLigados', nomeUtilizadoresLigados);
             }
         });
         //FIM LER UTILIZADORES DO FICHEIRO E VERIFICAR SE JÁ EXISTE ALGUM REGISTADO COM ESSE NOME

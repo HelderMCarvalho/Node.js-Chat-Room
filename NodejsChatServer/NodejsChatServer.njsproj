@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="public\jquery.min.js" />
     <Compile Include="public\scripts.js" />
     <Content Include="public\index.html" />
     <Content Include="package.json" />

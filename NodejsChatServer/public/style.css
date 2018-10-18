@@ -25,9 +25,10 @@ body {
 div#mensagens {
     position: fixed;
     bottom: 0;
+    right: 0;
     margin-top: 35px;
     margin-bottom: 41px;
-    width: 100%;
+    width: 90%;
     overflow-y: scroll;
     max-height: 89.6%;
 }
@@ -37,7 +38,8 @@ form#mensagem {
     padding: 3px;
     position: fixed;
     bottom: 0;
-    width: 100%;
+    right: 0;
+    width: 90%;
 }
     form#mensagem input {
         border: 0;
@@ -52,15 +54,15 @@ form#mensagem {
         padding: 10px;
     }
 
-#listaMensagens, #listaEscrever {
+#listaMensagens, #listaEscrever, #listautilizadoresLigados {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
-    #listaMensagens li, #listaEscrever li {
+    #listaMensagens li, #listaEscrever li, #listautilizadoresLigados li {
         padding: 5px 10px;
     }
-        #listaMensagens li:nth-child(odd), #listaEscrever li:nth-child(odd) {
+        #listaMensagens li:nth-child(odd), #listaEscrever li:nth-child(odd), #listautilizadoresLigados li:nth-child(odd) {
             background: #eee;
         }
 
@@ -80,11 +82,15 @@ a {
     text-decoration: none;
 }
 
-div#loginHeader {
+div#loginHeader, div#logoutHeader {
     top: 0;
     position: fixed;
     width: 100%;
     background-color: white;
+}
+#utilizadorLigado {
+    width: 50%;
+    float: left;
 }
 /*FIM PÁGINA MENSAGENS*/
 
