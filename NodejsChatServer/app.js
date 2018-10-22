@@ -17,6 +17,7 @@ var nomeUtilizadoresLigados = [];
 
 socket.on('connection', function (socket2) {
     var utilizador = { nome: 'GUEST', password: '' };
+    socket2.utilizador = utilizador;
     utilizadoresLigados.push(socket2);
     nomeUtilizadoresLigados.push(utilizador.nome);
     socket.emit('atualizarUtilizadoresLigados', nomeUtilizadoresLigados);
@@ -32,6 +33,13 @@ socket.on('connection', function (socket2) {
                 return;
             }
             uti.emit('envioMensagemCliente', { utilizador: utilizador.nome, msg: mensagem });
+        });
+    }).on('envioMensagemPrivadaServidor', function (dados) {
+        utilizadoresLigados.forEach(function (uti) {
+            if (uti.utilizador.nome == dados.destino) {
+                uti.emit('envioMensagemPrivadaCliente', { utilizador: utilizador.nome, msg: dados.msg });
+                return;
+            }
         });
     }).on('registarUtilizador', function (uti) {
         //FUNÇÃO REGISTAR UTILIZADORES
@@ -92,6 +100,7 @@ socket.on('connection', function (socket2) {
             else if (existe == 1 && passcorreta == 1) {
                 nomeUtilizadoresLigados.splice(nomeUtilizadoresLigados.indexOf('GUEST'), 1);
                 utilizador = uti;
+                socket2.utilizador = utilizador;
                 socket2.emit('confirmacaoLoginUtilizador', 1); //Fez login
                 nomeUtilizadoresLigados.push(utilizador.nome);
                 socket.emit('atualizarUtilizadoresLigados', nomeUtilizadoresLigados);

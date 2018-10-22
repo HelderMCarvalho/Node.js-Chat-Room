@@ -1,10 +1,10 @@
 ﻿<!doctype html>
 <html>
-<head>
-    <title>Sala de Conversação - TeSP DWM</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="./style.css" type="text/css">
-</head>
+    <head>
+        <title>Sala de Conversação - TeSP DWM</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="./style.css" type="text/css">
+    </head>
     <body>
         <div id="loginHeader">
             <div class="text-center floatLeft" style="width: 50%;">
@@ -37,11 +37,14 @@
             <ul id="listaEscrever"></ul>
         </div>
         <form id="mensagem">
+            <select id="destino">
+                <option value="Todos" selected>TODOS</option>
+            </select>
             <input id="inputMensagem" type="text" autocomplete="off" />
             <button type="submit">Enviar</button>
         </form>
-        <script src='./jquery.min.js'></script>
-        <script src='/socket.io/socket.io.js'></script>
+        <script src='./jquery.min.js' type="text/javascript"></script>
+        <script src='/socket.io/socket.io.js' type="text/javascript"></script>
         <script src="./scripts.js" type="text/javascript"></script>
     </body>
 </html>

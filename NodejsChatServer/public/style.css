@@ -1,4 +1,4 @@
-* {
+Ôªø* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -21,7 +21,7 @@ body {
     float: right;
 }
 
-/*P¡GINA MENSAGENS*/
+/*P√ÅGINA MENSAGENS*/
 div#mensagens {
     position: fixed;
     bottom: 0;
@@ -44,14 +44,16 @@ form#mensagem {
     form#mensagem input {
         border: 0;
         padding: 10px;
-        width: 90%;
+        width: 86.8%;
         margin-right: .5%;
     }
-    form#mensagem button {
-        width: 9%;
+    form#mensagem button, form#mensagem select {
         background: rgb(130, 224, 255);
         border: none;
         padding: 10px;
+    }
+    form#mensagem button {
+        width: 7%;
     }
 
 #listaMensagens, #listaEscrever, #listautilizadoresLigados {
@@ -92,9 +94,9 @@ div#loginHeader, div#logoutHeader {
     width: 50%;
     float: left;
 }
-/*FIM P¡GINA MENSAGENS*/
+/*FIM P√ÅGINA MENSAGENS*/
 
-/*P¡GINA REGISTAR*/
+/*P√ÅGINA REGISTAR*/
 div.registar {
     width: auto;
     margin: 0 auto;
@@ -111,4 +113,4 @@ h3.erroLoginRegisto{
     color: red;
     display: none;
 }
-/*FIM P¡GINA REGISTAR*/
+/*FIM P√ÅGINA REGISTAR*/

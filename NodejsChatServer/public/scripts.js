@@ -1,10 +1,15 @@
-﻿$(function () {
+﻿$(document).ready(function () {
     var socket = io();
     var utilizador = 'GUEST';
     //ENVIAR MENSAGEM
     $('form#mensagem').submit(function () {
-        socket.emit('envioMensagemServidor', $('#inputMensagem').val());
-        $('#listaMensagens').append($('<li>').text(utilizador + ': ' + $('#inputMensagem').val()));
+        if ($('#destino').val() == 'Todos') {
+            socket.emit('envioMensagemServidor', $('#inputMensagem').val());
+            $('#listaMensagens').append($('<li>').text(utilizador + ': ' + $('#inputMensagem').val()));
+        } else {
+            socket.emit('envioMensagemPrivadaServidor', { destino: $('#destino').val(), msg: $('#inputMensagem').val() });
+            $('#listaMensagens').append($('<li>').text('Privada para ' + $('#destino').val() + ': ' + $('#inputMensagem').val()));
+        }
         $('#inputMensagem').val('');
         $("#mensagens").scrollTop($("#mensagens")[0].scrollHeight);
         return false;
@@ -15,13 +20,15 @@
     var tem = false;
     var vazio = true;
     $("#inputMensagem").keyup(function () {
-        if (($("#inputMensagem").val().length == 1) && (tem == false)) {
+        if (($("#inputMensagem").val().length >= 1) && (tem == false)) {
             tem = true;
             vazio = false;
+            console.log('escreve');
             socket.emit('comecaEscrever');
-        } else if (($(this).val() == '') && (vazio == false)) {
+        } else if (($("#inputMensagem").val() == '') && (vazio == false)) {
             tem = false;
             vazio = true;
+            console.log('não escreve');
             socket.emit('parouEscrever');
         }
     });
@@ -34,7 +41,7 @@
         return false;
     });
     socket.on('confirmacaoRegistarUtilizador', function (flag) {
-        if (flag==0) {
+        if (flag == 0) {
             $('h3.erroLoginRegisto').css('display', 'block');
         }
     });
@@ -65,11 +72,13 @@
     socket.on('envioMensagemCliente', function (mensagem) {
         $('#listaMensagens').append($('<li>').text(mensagem.utilizador + ': ' + mensagem.msg));
     });
+    socket.on('envioMensagemPrivadaCliente', function (mensagem) {
+        $('#listaMensagens').append($('<li>').text('Privada de ' + mensagem.utilizador + ': ' + mensagem.msg));
+    });
 
     //RECEBER QUEM ESTÁ A ESCREVER
     socket.on('mostrarEscrever', function (utilizadorEscreve) {
         $('#listaEscrever').append($('<li id="escrever' + utilizadorEscreve + '">').text(utilizadorEscreve + ' está a escrever!'));
-        console.log('&aacute;');
     });
 
     //RECEBER QUEM PAROU DE ESCREVER
@@ -81,8 +90,13 @@
     //ATUALIZAR LISTA DE UTILIZADORES LIGADOS
     socket.on('atualizarUtilizadoresLigados', function (nomesUtilizadoresLigados) {
         $('#listautilizadoresLigados').empty();
+        $('#destino').empty();
+        $('#destino').append($('<option value="Todos">').text('TODOS'));
         $.each(nomesUtilizadoresLigados, function (key, value) {
-            $('#listautilizadoresLigados').append($('<li id="utilizador' + value + '">').text(value));
+            $('#listautilizadoresLigados').append($('<li>').text(value));
+            if (value != 'GUEST' && value != utilizador) {
+                $('#destino').append($('<option value="' + value + '">').text(value));
+            }
         });
     });
 });
